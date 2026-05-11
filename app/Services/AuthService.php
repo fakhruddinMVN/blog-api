@@ -27,16 +27,15 @@ class AuthService
     {
         $user = $this->authRepository->login($data['email']);
 
-        if(!$user || !Hash::check($data['password']->password, $user->password))
-            {
-                throw ValidationException::withMessages([
-                    'email' => ['The provided credentials are incorrect.'],
-                ]);
-            }
+        if (!$user || !Hash::check($data['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
 
         $this->authRepository->deleteAllTokens($user);
 
-        $token = $this->authRepository->createToken($user,'auth_token');
+        $token = $this->authRepository->createToken($user, 'auth_token');
         return compact('user', 'token');
     }
 
