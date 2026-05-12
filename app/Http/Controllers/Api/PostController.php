@@ -5,26 +5,35 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PostController extends Controller
 {
     public function __construct(private PostService $postService){}
 
-    public function index(): JsonResponse
+    public function index(): AnonymousResourceCollection
     {
         $posts = $this->postService->getAllPosts();
 
-        return response()->json($posts);
+        $post = $this->postService->getPostById(1);
+
+        return PostResource::collection($posts);
     }
 
     public function getPost(int $postId): JsonResponse
     {
         $post = $this->postService->getPostById($postId);
-        return response()->json($post);
+
+        if (! $post) {
+        return response()->json(['message' => 'Post not found'], 404);
+    }
+
+        return response()->json(new PostResource($post));
     }
 
     public function createPost(StorePostRequest $request): JsonResponse

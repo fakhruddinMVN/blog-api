@@ -13,12 +13,12 @@ class PostRepository implements PostRepositoryInterface
      */
     public function getAll(int $perPage = 20): LengthAwarePaginator
     {
-        return Post::with('user:id,name')->latest()->paginate($perPage);
+        return Post::with('user:id,name')->withCount('comments')->latest()->paginate($perPage);
     }
 
     public function findById(int $id): ?Post
     {
-        return Post::with('user:id,name')->find($id);
+        return Post::with('user:id,name')->withCount('comments')->find($id);
     }
 
     public function create(array $data): Post

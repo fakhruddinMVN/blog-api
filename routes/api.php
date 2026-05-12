@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,4 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/posts', [PostController::class, 'createPost']);
     Route::put('/posts/{post}', [PostController::class, 'updatePost']);
     Route::delete('/posts/{post}', [PostController::class, 'deletePost']);
+
+    Route::post('posts/{post}/comments',[CommentController::class, 'createComment']);
 });
